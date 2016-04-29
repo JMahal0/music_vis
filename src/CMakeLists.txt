@@ -6,9 +6,9 @@ cmake_minimum_required(VERSION 2.8)
 # Application source
 set(APPLICATION_SOURCE
     
-    audio_analyzer.cpp
-    drawrend.cpp
-    visualization.cpp
+    # audio_analyzer.cpp
+    # drawrend.cpp
+    # visualization.cpp
     main.cpp
 )
 
@@ -44,6 +44,7 @@ target_link_libraries( rasterizester
     ${OPENGL_LIBRARIES}
     ${FREETYPE_LIBRARIES}
     ${CMAKE_THREADS_INIT}
+    Aquila
 )
 
 #-------------------------------------------------------------------------------

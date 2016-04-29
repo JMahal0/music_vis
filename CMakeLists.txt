@@ -126,6 +126,9 @@ find_package(Freetype REQUIRED)
 add_subdirectory(CGL)
 include_directories(CGL/include)
 
+# Aquila 
+add_subdirectory(aquila-src)
+
 #-------------------------------------------------------------------------------
 # Add subdirectories
 #-------------------------------------------------------------------------------

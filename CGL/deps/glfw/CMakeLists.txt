@@ -578,7 +578,7 @@ if (GLFW_INSTALL)
         configure_file("${GLFW_SOURCE_DIR}/cmake_uninstall.cmake.in"
                        "${GLFW_BINARY_DIR}/cmake_uninstall.cmake" IMMEDIATE @ONLY)
 
-        add_custom_target(uninstall
+        add_custom_target(uninstall-glfw
                           "${CMAKE_COMMAND}" -P
                           "${GLFW_BINARY_DIR}/cmake_uninstall.cmake")
     endif()
