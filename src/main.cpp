@@ -132,17 +132,12 @@ int main( int argc, char** argv ) {
 
 
 
-  // vector<SVG*> svgs(loadPath(argv[1])); // left off here
-  // if (svgs.empty()) {
-  //   msg("No svg files successfully loaded. Exiting.");
-  //   return 0;
-  // }
 
   // // create viewer
   // Viewer viewer = Viewer();
 
-  // // create application
-  // DrawRend app(svgs);
+  // create application
+  DrawRend app(wav);
 
   // // set renderer
   // viewer.set_renderer(&app);
