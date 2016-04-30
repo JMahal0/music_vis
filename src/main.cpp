@@ -125,7 +125,8 @@ int main( int argc, char** argv ) {
   if (path_str.compare(path_str.length()-4,4,".wav") == 0 ){
        cout << "YES" << endl;
    } else {
-       cout << "NO" << endl;
+       msg("Must input .wav file");
+       return 0;
    }
 
   Aquila::WaveFile wav(argv[1]);
@@ -137,7 +138,7 @@ int main( int argc, char** argv ) {
   // Viewer viewer = Viewer();
 
   // create application
-  DrawRend app(wav);
+  // DrawRend app(wav);
 
   // // set renderer
   // viewer.set_renderer(&app);
