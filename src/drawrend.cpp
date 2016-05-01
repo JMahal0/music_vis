@@ -263,17 +263,17 @@ void DrawRend::write_screenshot() {
     redraw();
     if (show_zoom) draw_zoom();
 
-    vector<unsigned char> windowPixels( 4*width*height );
-    glReadPixels(0, 0, 
-                width,
-                height,
-                GL_RGBA,
-                GL_UNSIGNED_BYTE,
-                &windowPixels[0] );
+    // vector<unsigned char> windowPixels( 4*width*height );
+    // glReadPixels(0, 0, 
+    //             width,
+    //             height,
+    //             GL_RGBA,
+    //             GL_UNSIGNED_BYTE,
+    //             &windowPixels[0] );
 
-    vector<unsigned char> flippedPixels( 4*width*height );
-    for (int row = 0; row < height; ++row)
-      memcpy(&flippedPixels[row * width * 4], &windowPixels[(height - row - 1) * width * 4], 4*width);
+    // vector<unsigned char> flippedPixels( 4*width*height );
+    // for (int row = 0; row < height; ++row)
+    //   memcpy(&flippedPixels[row * width * 4], &windowPixels[(height - row - 1) * width * 4], 4*width);
 
     time_t t = time(nullptr);
     tm *lt = localtime(&t);
@@ -282,6 +282,8 @@ void DrawRend::write_screenshot() {
       << lt->tm_hour << "-" << lt->tm_min << "-" << lt->tm_sec << ".png";
     string file = ss.str();
     cout << "Writing file " << file << "...";
+
+    //Maybe just replace flippedPixels with framebuffer
     if (lodepng::encode(file, flippedPixels, width, height))
       cerr << "Could not be written" << endl;
     else 

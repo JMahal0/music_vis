@@ -16,91 +16,21 @@
 // #include "svgparser.h"
 
 #include "aquila/source/WaveFile.h"
+#include "audio_analyzer.h"
 
 using namespace std;
 using namespace CGL;
 
 #define msg(s) cerr << "[Main] " << s << endl;
 
+int analyze(double* sample_data, WaveFile wav, double time) {
 
-// SVG *loadFile( const char* path ) {
 
-//   SVG* svg = new SVG();
 
-//   if( SVGParser::load( path, svg ) < 0) {
-//     delete svg;
-//     return NULL;
-//   }
   
-//   return svg;
-// }
 
-// vector<SVG*> loadDirectory( const char* path ) {
-
-//   DIR *dir = opendir (path);
-//   vector<SVG*> svgs;
-//   if(dir) {
-    
-//     struct dirent *ent; size_t n = 0;
-    
-//     // load files
-//     string pathname = path; 
-//     if (pathname[pathname.size()-1] != '/') pathname.push_back('/');
-//     while (((ent = readdir (dir)) != NULL) && (n < 9)) {
-
-//       string filename = ent->d_name;
-//       string filesufx = filename.substr(filename.find_last_of(".") + 1, 3);
-//       if (filesufx == "svg" ) {
-//         cerr << "[Drawer] Loading " << filename << "... "; 
-//         SVG *svg = loadFile((pathname + filename).c_str());
-//         if (!svg) {
-//           cerr << "Failed (Invalid SVG file)" << endl;
-//         } else {
-//           cerr << "Succeeded" << endl;
-//           svgs.push_back(svg);
-//           n++;
-//         }
-//       }
-//     }
-
-//     closedir (dir);
-
-//     if (n) {
-//       msg("Successfully Loaded " << n << " files from " << path);
-//       return svgs;
-//     }
-
-//     msg("No valid svg files found in " << path);
-//     return svgs;
-//   } 
-
-//   msg("Could not open directory" << path);
-//   return svgs;
-// }
-
-// vector<SVG*> loadPath( const char* path ) {
-
-//   struct stat st;
-
-//   // file exist?
-//   if(stat(path, &st) < 0 ) {
-//     msg("File does not exit: " << path);
-//     return vector<SVG*>();
-//   }
-
-//   // load directory
-//   if( st.st_mode & S_IFDIR ) {
-//     return loadDirectory(path);
-//   } 
-
-//   // load file
-//   if( st.st_mode & S_IFREG ) {
-//     return vector<SVG*>(1,loadFile(path));
-//   }
-
-//   msg("Invalid path: " << path);
-//   return vector<SVG*>();
-// }
+  return 0;
+}
 
 
 int main( int argc, char** argv ) {
@@ -119,17 +49,19 @@ int main( int argc, char** argv ) {
   }
 
   //argv[1] is actually a .wav file
-
   std::string path_str(argv[1]);
-
-  if (path_str.compare(path_str.length()-4,4,".wav") == 0 ){
-       cout << "YES" << endl;
-   } else {
-       msg("Must input .wav file");
-       return 0;
+  if (path_str.compare(path_str.length()-4,4,".wav") != 0 ){
+    msg("Must input .wav file");
+    return 0;
    }
 
   Aquila::WaveFile wav(argv[1]);
+  cout << "Loaded file: " << wav.getFilename() << " (" << wav.getBitsPerSample() << "bits/sample)" << endl;
+  // cout << "# of Channels: " << wav.getChannelsNum() << endl;
+  // cout << "Sample Freq: " << wav.getBytesPerSec()/wav.getBytesPerSample() << endl;
+  // cout << "Audio Length: " << wav.getAudioLength() << "ms" << endl;
+
+  // cout << AudioAnalyzer::analyze(0.0) << endl;
 
 
 
