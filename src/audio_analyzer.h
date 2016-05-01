@@ -5,11 +5,11 @@
 
 #include "aquila/source/WaveFile.h"
 
-namespace std {
+namespace Aquila {
 
 class AudioAnalyzer {
  public:
- 	static int analyze(double time);
+ 	static int analyze(WaveFile wav);
 
 };
 

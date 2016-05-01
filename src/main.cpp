@@ -23,14 +23,17 @@ using namespace CGL;
 
 #define msg(s) cerr << "[Main] " << s << endl;
 
-int analyze(double* sample_data, WaveFile wav, double time) {
+// int analyze(double* sample_data, Aquila::WaveFile wav, double time) {
+//   const size_t SIZE = 64;
+
+//   auto fft = Aquila::FftFactory::getFft(SIZE);
+//   Aquila::SpectrumType spectrum = fft->fft(wav.toArray());
+
+//   cout << "stuff" << endl;
 
 
-
-  
-
-  return 0;
-}
+//   return 0;
+// }
 
 
 int main( int argc, char** argv ) {
@@ -61,7 +64,7 @@ int main( int argc, char** argv ) {
   // cout << "Sample Freq: " << wav.getBytesPerSec()/wav.getBytesPerSample() << endl;
   // cout << "Audio Length: " << wav.getAudioLength() << "ms" << endl;
 
-  // cout << AudioAnalyzer::analyze(0.0) << endl;
+  cout << Aquila::AudioAnalyzer::analyze(wav) << endl;
 
 
 
