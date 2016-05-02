@@ -9,7 +9,7 @@ namespace Aquila {
 
 class AudioAnalyzer {
  public:
- 	static int analyze(WaveFile wav);
+ 	static void FFT(WaveFile wav, Aquila::SpectrumType* spectrum);
 
 };
 

@@ -13,19 +13,16 @@ using namespace std;
 
 namespace Aquila {
 
-int AudioAnalyzer::analyze(WaveFile wav) {
+void AudioAnalyzer::FFT(WaveFile wav, Aquila::SpectrumType* spectrum) {
 	
-	const size_t SIZE = 1024;
+	const size_t SIZE = 256;
 
 	auto fft = Aquila::FftFactory::getFft(SIZE);
-	Aquila::SpectrumType spectrum = fft->fft(wav.toArray());
+	*spectrum = fft->fft(wav.toArray());
 
     Aquila::TextPlot plot("Input signal");
     plot.setTitle("Spectrum");
-    plot.plotSpectrum(spectrum);
-
-	
-	return 5;
+    plot.plotSpectrum(*spectrum);	
 }
 
 
