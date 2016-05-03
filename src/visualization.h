@@ -35,7 +35,7 @@ struct Shape {
 	~Shape() {}
 
 	// Draws the Shape to the framebuffer
-	virtual void draw(DrawRend *dr, Color color) = 0;
+	virtual void draw(DrawRend *dr, Color color, Matrix3x3 global_transform) = 0;
 
 	// Makes the Shape's color closer and closer to the
 	// background color.
@@ -54,7 +54,7 @@ struct Shape {
 
 struct Triangle : Shape {
 	Triangle(): Shape() {}
-	void draw(DrawRend *dr, Color color);
+	void draw(DrawRend *dr, Color color, Matrix3x3 global_transform);
 	virtual Color color(double alpha, double beta, Color c) = c;
 
 	Vector2D a, b, c; // The 3 points of the triangle
@@ -71,22 +71,22 @@ struct GradiantTri : Triangle {
 
 struct Line : Shape {
 	Line(): Shape() {}
-	void draw(DrawRend *dr, Color color);
+	void draw(DrawRend *dr, Color color, Matrix3x3 global_transform);
 
 	Vector2D p0, p1;
 };
 
 struct Rectangle : Shape {
 	Rectangle(): Shape() {}
-	void draw(DrawRend *dr, Color color);
+	void draw(DrawRend *dr, Color color, Matrix3x3 global_transform);
 
-	Vector2D p0; // The bottom left corner of the Rectangle
+	Vector2D p; // The bottom left corner of the Rectangle
 	double w, h;
 };
 
 struct Circle : Shape {
 	Circle(): Shape() {}
-	void draw(DrawRend *dr, Color color);
+	void draw(DrawRend *dr, Color color, Matrix3x3 global_transform);
 	virtual Color color(double distance, Color c) = c;
 
 	Vector2D o; // origin
