@@ -117,8 +117,8 @@ void DrawRend::resolve() { //where downsampling happens!
   }
 }
 
-// rasterize a point
-void DrawRend::rasterize_point( float x, float y, Color color ) {
+// rasterize a point from a line
+void DrawRend::rasterize_line_point( float x, float y, Color color ) {
   // fill in the nearest pixel
   int sx = (int) floor(x) * sqrt(sample_rate);
   int sy = (int) floor(y) * sqrt(sample_rate);
@@ -141,8 +141,8 @@ void DrawRend::rasterize_point( float x, float y, Color color ) {
 
 }
 
-  // rasterize a point from rasterize_triangle
-void DrawRend::rasterize_tri_point(float x, float y, int xr, int yr, Color color) {
+  // rasterize a point from a shape
+void DrawRend::rasterize_shape_point(float x, float y, int xr, int yr, Color color) {
     // check bounds, x and y are floats that hold integer values
   int sx = (int) floor(x);
   int sy = (int) floor(y);
@@ -297,11 +297,6 @@ void DrawRend::rasterize_triangle( float x0, float y0,
                          float x1, float y1,
                          float x2, float y2,
                          Color color, Triangle *tri) {
-  // Part 2: Fill in this function with basic triangle rasterization code
-  // Part 3: Add supersampling to antialias your triangles
-  // Part 5: Add barycentric coordinates and use tri->color for shading when available
-  // Part 6: Fill in a SampleParams struct with psm, lsm and pass it to the tri->color function
-  // Part 7: Pass in correct barycentric differentials dx and dy to tri->color for mipmapping
   
   int sf = sqrt(sample_rate);
   float xmin = floor(min(x0, min(x1,x2)));
@@ -322,9 +317,9 @@ void DrawRend::rasterize_triangle( float x0, float y0,
           if (alpha >= -.0001 && beta >= -.0001 && gamma >= -.0001 && alpha <= 1 && beta <= 1 && gamma <= 1) {
             if (tri) {
               Color col = tri->color(Vector2D(alpha, beta)); 
-              rasterize_tri_point(x, y, xr, yr, col);
+              rasterize_shape_point(x, y, xr, yr, col);
             } else {
-              rasterize_tri_point(x, y, xr, yr, color);          
+              rasterize_shape_point(x, y, xr, yr, color);          
             }
           }
 
@@ -336,6 +331,40 @@ void DrawRend::rasterize_triangle( float x0, float y0,
 
 }
 
+void rasterize_circle( float cx, float cy, float r, Color color, Circle *cir ) {
 
+  int sf = sqrt(sample_rate);
+  float xmin = floor(cx - r);
+  float xmax = ceil(cx + r);
+  float ymin = floor(cy - r);
+  float ymax = ceil(cy + r);
+
+  for (float y = ymin; y <= ymax; y++) {
+    for (int yr = 0; yr < sf; yr++) {
+      float sy = y + (yr+1.0)/(sf+1.0);
+      for (float x = xmin; x <= xmax; x++) {
+        for (int xr = 0; xr < sf; xr++) {
+          float sx = x + (xr+1.0)/(sf+1.0);
+
+          // change this
+          float dist = sqrt((cx - sx)*(cx - sx) + (cy - sy)*(cy - sy));
+
+          if (dist <= r) {
+            if (cir) { // replace with cir
+              Color col = cir->color(Vector2D(alpha, beta)); // change this
+              rasterize_shape_point(x, y, xr, yr, col);
+            } else {
+              rasterize_shape_point(x, y, xr, yr, color);          
+            }
+          }
+
+        }
+      }
+    }
+  }
+
+
+
+}
 
 }

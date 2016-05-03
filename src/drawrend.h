@@ -16,7 +16,6 @@ class DrawRend {
   ~DrawRend( void );
 
   // inherited Renderer interface functions
-  void init();
   void resize( size_t w, size_t h );
   void keyboard_event( int key, int event, unsigned char mods );
 
@@ -44,7 +43,8 @@ class DrawRend {
                            float x2, float y2,
                            Color color, Triangle *tri = NULL );
 
-
+  // rasterize a circle
+  void rasterize_circle( float cx, float cy, float r, Color color, Circle *cir = NULL)
 
 private:
   Matrix3x3 ndc_to_screen;
