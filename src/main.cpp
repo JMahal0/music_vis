@@ -80,7 +80,7 @@ void stereoFile(Aquila::WaveFile wav_left, Aquila::WaveFile wav_right) {
     
     double intensity_right = sqrt(m_data_right[i].real()*m_data_right[i].real() + m_data_right[i].imag()*m_data_right[i].imag());
 
-    printf("Int L %f R %f\n", intensity_left/Aquila::rms(wav_left), intensity_right/Aquila::rms(wav_right));
+    // printf("Int L %f R %f\n", intensity_left/Aquila::rms(wav_left), intensity_right/Aquila::rms(wav_right));
 
 
   }

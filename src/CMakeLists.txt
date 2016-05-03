@@ -8,8 +8,10 @@ set(APPLICATION_SOURCE
     
     audio_analyzer.cpp
     # drawrend.cpp
-    # visualization.cpp
+    visualization.cpp
     main.cpp
+    # transforms.cpp
+    
 )
 
 #-------------------------------------------------------------------------------
