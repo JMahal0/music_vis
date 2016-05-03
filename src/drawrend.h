@@ -6,31 +6,34 @@
 #include "CGL/color.h"
 #include <vector>
 #include "GLFW/glfw3.h"
+// #include "CGL/matrix3x3.h"
+// #include "CGL/vector2D.h"
+
+
+#include "visualization.h"
 
 namespace CGL {
 
+
+
 class DrawRend {
  public:
-  DrawRend(Aquila::WaveFile wav_): {}
+  DrawRend(size_t w, size_t h);
   
   ~DrawRend( void );
 
-  // inherited Renderer interface functions
-  void resize( size_t w, size_t h );
-  void keyboard_event( int key, int event, unsigned char mods );
-
   // write current pixel buffer to disk
-  void write_screenshot();
+  void write_frame_shot(double frame_number);
 
   // drawing functions
-  void redraw();
-  void resolve();
+  void draw_frame();
+  void downsample();
 
   // rasterize a point
-  void rasterize_point( float x, float y, Color color );
+  void rasterize_line_point( float x, float y, Color color );
 
   // rasterize a point for a triangle
-  void rasterize_tri_point( float x, float y, int xr, int yr, Color color );
+  void rasterize_shape_point( float x, float y, int xr, int yr, Color color );
 
   // rasterize a line
   void rasterize_line( float x0, float y0,
@@ -44,7 +47,7 @@ class DrawRend {
                            Color color, Triangle *tri = NULL );
 
   // rasterize a circle
-  void rasterize_circle( float cx, float cy, float r, Color color, Circle *cir = NULL)
+  void rasterize_circle( float cx, float cy, float r, Color color, Circle *cir = NULL);
 
 private:
   Matrix3x3 ndc_to_screen;
@@ -58,6 +61,9 @@ private:
   
 
 };
+
+
+
 
 } // namespace CGL
 

@@ -17,6 +17,9 @@
 
 #include "aquila/source/WaveFile.h"
 #include "audio_analyzer.h"
+#include "visualization.h"
+#include "drawrend.h"
+
 
 using namespace std;
 using namespace CGL;
@@ -45,7 +48,8 @@ void monoFile(Aquila::WaveFile wav) {
     double intensity = sqrt(m_data[i].real()*m_data[i].real() + m_data[i].imag()*m_data[i].imag());
     // printf("Int %f\t", intensity);
 
-
+    //call visualzations.visualize and then
+    //call drawrender.write_frame_shot
 
 
   }

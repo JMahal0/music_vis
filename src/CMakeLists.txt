@@ -7,11 +7,11 @@ cmake_minimum_required(VERSION 2.8)
 set(APPLICATION_SOURCE
     
     audio_analyzer.cpp
-    # drawrend.cpp
+    transforms.cpp
+    drawrend.cpp
     visualization.cpp
     main.cpp
-    # transforms.cpp
-    
+
 )
 
 #-------------------------------------------------------------------------------

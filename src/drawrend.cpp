@@ -8,9 +8,15 @@
 
 #include <typeinfo>
 
+// #include "visualization.h"
+
+
 using namespace std;
 
 namespace CGL {
+
+class Triangle;
+class Circle;
 
 DrawRend::DrawRend(size_t w, size_t h) {
   sample_rate = 1;
@@ -40,9 +46,9 @@ DrawRend::~DrawRend( void ) {}
  * The image filename contains the month, date, hour, minute, and second
  * to make sure it is unique and identifiable.
  */
-void DrawRend::write_screenshot() {
-    redraw();
-    if (show_zoom) draw_zoom();
+void DrawRend::write_frame_shot(double frame_number) {
+    draw_frame();
+
 
     time_t t = time(nullptr);
     tm *lt = localtime(&t);
@@ -59,30 +65,26 @@ void DrawRend::write_screenshot() {
 }
 
 /**
- * Draws the current SVG tab to the screen. Also draws a 
- * border around the SVG canvas. Resolves the supersample buffers
+ * Draws the current frame to the framebuffer. Resolves the supersample buffers
  * into the framebuffer before posting the framebuffer pixels to the screen.
  */
-void DrawRend::redraw() {
+void DrawRend::draw_frame() {
   memset(&framebuffer[0], 255, 4 * width * height);
   memset(&superbuffer[0], 255, 4 * width * height * sample_rate);
 
-  SVG &svg = *svgs[current_svg];
-  svg.draw(this, ndc_to_screen*svg_to_ndc[current_svg]);
+  // SVG &svg = *svgs[current_svg];
+  // svg.draw(this, ndc_to_screen*svg_to_ndc[current_svg]);
 
-  // draw canvas outline
+  // call the draw method of each Shape in the vector of Shapes, which is either public static or passed in from somewhere
 
-  resolve();
-  draw_pixels();
+  downsample();
 }
 
 /**
  * Resolves whatever supersampling buffer you create into the
  * framebuffer pixel vector
  */
-void DrawRend::resolve() { //where downsampling happens!
-  // Part 3: Fill this in
-  
+void DrawRend::downsample() {
   //Average the values of superbuffer here and then put into framebuffer
 
   for (int fpix = 0; fpix < width * height; fpix++) { // goes thru all pixels in framebuffer
@@ -172,7 +174,6 @@ void DrawRend::rasterize_line( float x0, float y0,
                      float x1, float y1,
                      Color color) {
 
-  // Part 1: Fill this in
   int dx = x1-x0;
   int dy = y1-y0;
 
@@ -180,7 +181,7 @@ void DrawRend::rasterize_line( float x0, float y0,
     if (dy <= dx) { //Oct 1
       int x = x0, y = y0, e = -dx;
       while (x < x1) {
-        rasterize_point(x, y, color);
+        rasterize_line_point(x, y, color);
 
         x += 1;
         e += 2*dy;
@@ -193,7 +194,7 @@ void DrawRend::rasterize_line( float x0, float y0,
     } else { //Oct 2
       int x = y0, y = x0, e = -dy;
       while (x < y1) {
-        rasterize_point(y, x, color);
+        rasterize_line_point(y, x, color);
 
         x += 1;
         e += 2*dx;
@@ -208,7 +209,7 @@ void DrawRend::rasterize_line( float x0, float y0,
     if (-dx < dy) { //Oct 3 -nw
       int x = y0, y = -x0, e = -dy;
       while (x < y1) {
-        rasterize_point(-y, x, color); 
+        rasterize_line_point(-y, x, color); 
 
         x += 1;
         e += 2* -dx;
@@ -221,7 +222,7 @@ void DrawRend::rasterize_line( float x0, float y0,
     } else { //Oct 4
       int x = -x0, y = y0, e = -dx;
       while (x < -x1) {
-        rasterize_point(-x, y, color);
+        rasterize_line_point(-x, y, color);
 
         x += 1;
         e += 2*dy;
@@ -236,7 +237,7 @@ void DrawRend::rasterize_line( float x0, float y0,
     if (-dy < -dx) { //Oct 5 
       int x = -x0, y = -y0, e = dx;
       while (x < -x1) {
-        rasterize_point(-x, -y, color);
+        rasterize_line_point(-x, -y, color);
 
         x += 1;
         e += 2* -dy;
@@ -249,7 +250,7 @@ void DrawRend::rasterize_line( float x0, float y0,
     } else { //Oct 6 
       int x = -y0, y = -x0, e = dy;
       while (x < -y1) {
-        rasterize_point(-y, -x, color);
+        rasterize_line_point(-y, -x, color);
 
         x += 1;
         e += 2* -dx;
@@ -264,7 +265,7 @@ void DrawRend::rasterize_line( float x0, float y0,
     if (dx < -dy) { //Oct 7
       int x = -y0, y = x0, e = dy;
       while (x < -y1) {
-        rasterize_point(y, -x, color); 
+        rasterize_line_point(y, -x, color); 
 
         x += 1;
         e += 2*dx;
@@ -277,7 +278,7 @@ void DrawRend::rasterize_line( float x0, float y0,
     } else { //Oct 8
       int x = x0, y = -y0, e = -dx;
       while (x < x1) {
-        rasterize_point(x, -y, color);
+        rasterize_line_point(x, -y, color);
 
         x += 1;
         e += 2* -dy;
@@ -316,7 +317,7 @@ void DrawRend::rasterize_triangle( float x0, float y0,
           float gamma = 1 - alpha - beta;
           if (alpha >= -.0001 && beta >= -.0001 && gamma >= -.0001 && alpha <= 1 && beta <= 1 && gamma <= 1) {
             if (tri) {
-              Color col = tri->color(Vector2D(alpha, beta)); 
+              Color col = tri->color(alpha, beta, color); 
               rasterize_shape_point(x, y, xr, yr, col);
             } else {
               rasterize_shape_point(x, y, xr, yr, color);          
@@ -327,11 +328,10 @@ void DrawRend::rasterize_triangle( float x0, float y0,
       }
     }
   }
-
-
 }
 
-void rasterize_circle( float cx, float cy, float r, Color color, Circle *cir ) {
+  // rasterize a circle
+void DrawRend::rasterize_circle( float cx, float cy, float r, Color color, Circle *cir ) {
 
   int sf = sqrt(sample_rate);
   float xmin = floor(cx - r);
@@ -346,12 +346,11 @@ void rasterize_circle( float cx, float cy, float r, Color color, Circle *cir ) {
         for (int xr = 0; xr < sf; xr++) {
           float sx = x + (xr+1.0)/(sf+1.0);
 
-          // change this
           float dist = sqrt((cx - sx)*(cx - sx) + (cy - sy)*(cy - sy));
 
           if (dist <= r) {
-            if (cir) { // replace with cir
-              Color col = cir->color(Vector2D(alpha, beta)); // change this
+            if (cir) {
+              Color col = cir->color(dist/r, color);
               rasterize_shape_point(x, y, xr, yr, col);
             } else {
               rasterize_shape_point(x, y, xr, yr, color);          
@@ -362,9 +361,7 @@ void rasterize_circle( float cx, float cy, float r, Color color, Circle *cir ) {
       }
     }
   }
-
-
-
 }
+
 
 }

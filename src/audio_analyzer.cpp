@@ -3,7 +3,6 @@
  */
 
 #include "audio_analyzer.h"
-#include "aquila/source/WaveFile.h"
 #include "aquila/transform/FftFactory.h"
 #include <iostream>
 #include "aquila/tools/TextPlot.h"
