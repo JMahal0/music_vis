@@ -20,7 +20,7 @@ class Triangle;
 class Circle;
 
 DrawRend::DrawRend(size_t w, size_t h) {
-  sample_rate = 1;
+  sample_rate = 2;
 
   // Set up size
   width = w; height = h;
@@ -52,12 +52,23 @@ DrawRend::~DrawRend( void ) {}
 void DrawRend::write_frame_shot(int frame_number, std::vector<VShape*> *shapes) {
     draw_frame(shapes);
 
+    string file_num = "";
+    if (frame_number < 10 && frame_number >= 0) {
+      file_num = "000" + std::to_string(frame_number);
+    } else if (frame_number < 100) {
+      file_num = "00" + std::to_string(frame_number);
+    } else if (frame_number < 1000) {
+      file_num = "0" + std::to_string(frame_number);
+    } else {
+      file_num = std::to_string(frame_number);
+    }
+
 
     time_t t = time(nullptr);
     tm *lt = localtime(&t);
     stringstream ss;
     ss << "frame_" /*<< lt->tm_mon+1 << "-" << lt->tm_mday << "_" 
-      << lt->tm_hour << "-" << lt->tm_min << "-" << lt->tm_sec << "-"*/ << frame_number << ".png"; 
+      << lt->tm_hour << "-" << lt->tm_min << "-" << lt->tm_sec << "-"*/ << file_num << ".png"; 
 
     // ss << "screenshot_" << lt->tm_mon+1 << "-" << lt->tm_mday << "_" 
     //   << lt->tm_hour << "-" << lt->tm_min << "-" << lt->tm_sec << "-" << frame_number << ".png"; //temp
@@ -86,7 +97,7 @@ void DrawRend::draw_frame(std::vector<VShape*> *shapes) {
 
   for (int i = 0; i < (*shapes).size(); ++i) {
     (*shapes)[i]->draw(this, ndc_to_screen);
-    cout << "[DrawRend] - draw_frame shape #" << i << endl;
+    // cout << "[DrawRend] - draw_frame shape #" << i << endl;
   }
 
   // (*shapes)[2]->draw(this, ndc_to_screen);

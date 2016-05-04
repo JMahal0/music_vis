@@ -82,7 +82,7 @@ void stereoFile(Aquila::WaveFile wav_left, Aquila::WaveFile wav_right) {
                         Color::fromHex("ff8c1a"), Color::fromHex("ff2d14"),
                         Color::fromHex("b3ffff"), Color::fromHex("80ffbf"));
 
-  CGL::DrawRend renderer = CGL::DrawRend(320, 240);
+  CGL::DrawRend renderer = CGL::DrawRend(640, 480);
 
   int length = m_data_left.size();
 

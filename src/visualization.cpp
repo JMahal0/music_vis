@@ -91,7 +91,7 @@ void Circle::draw(DrawRend *dr, Matrix3x3 global_transform) {
 		double dy = center.y - tanget_pt.y;
 
 		double radius = sqrt(dx * dx + dy * dy);
-		std::cout << "[Visualization] - Circle calling rasterize" << std::endl;
+		// std::cout << "[Visualization] - Circle calling rasterize" << std::endl;
 		dr->rasterize_circle( center.x, center.y, radius, fill_color);
 	}
 }
@@ -148,7 +148,7 @@ void Visualization::visualizeStereo(Aquila::ComplexType m_data_left, Aquila::Com
     
     double intensity_right = sqrt(m_data_right.real()*m_data_right.real() + m_data_right.imag()*m_data_right.imag());
 
-	float alf = std::max(std::min(1.0, intensity_right/str_right + intensity_left/str_left), .4);
+	float alf = std::min(std::max(0.4, intensity_right/str_right + intensity_left/str_left)*1.75, 1.0);
 	// std::cout << alf << std::endl;
 	f.a = alf;
 
