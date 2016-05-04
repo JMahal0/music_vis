@@ -48,7 +48,7 @@ class VShape {
   Color fill_color;
 };
 
-class Triangle : VShape {
+class Triangle : public VShape {
  public:
   Triangle(double _duration, Color f_c, Vector2D p0, Vector2D p1, Vector2D p2) : VShape(_duration, f_c) {
     a = p0;
@@ -63,7 +63,7 @@ class Triangle : VShape {
   Vector2D a, b, c; // The 3 points of the triangle
 };
 
-class GradiantTri : Triangle {
+class GradiantTri : public Triangle {
  public:
   GradiantTri(double _duration, Color f_c, Vector2D p0, Vector2D p1, Vector2D p2, Color p0c, Color p1c, Color p2c): Triangle(_duration, f_c, p0, p1, p2) {
     ac = p0c;
@@ -79,7 +79,7 @@ class GradiantTri : Triangle {
 
 
 
-class Line : VShape {
+class Line : public VShape {
  public:
   Line(double _duration, Color f_c, Vector2D _p0, Vector2D _p1): VShape(_duration, f_c) {
     p0 = _p0;
@@ -92,7 +92,7 @@ class Line : VShape {
   Vector2D p0, p1;
 };
 
-class Rectangle : VShape {
+class Rectangle : public VShape {
  public:
   Rectangle(double _duration, Color f_c, Vector2D _p, double _w, double _h): VShape(_duration, f_c) {
     p = _p;
@@ -107,7 +107,7 @@ class Rectangle : VShape {
   double w, h;
 };
 
-class Circle : VShape {
+class Circle : public VShape {
  public:
   Circle(double _duration, Color f_c, Vector2D _o, double _r): VShape(_duration, f_c) {
     o = _o;
@@ -122,7 +122,7 @@ class Circle : VShape {
   double r; // radius
 };
 
-class GradiantCir : Circle {
+class GradiantCir : public Circle {
  public:
   GradiantCir(double _duration, Color f_c, Vector2D _o, double _r, Color near, Color far): Circle(_duration, f_c, _o, _r) {
     near_c = near;
@@ -144,7 +144,7 @@ class Visualization {
 
  	void visualizeMono(Aquila::ComplexType m_data, int index, int length);
 
- 	void visualizeStereo(Aquila::ComplexType m_data_left, Aquila::ComplexType m_data_right, int index, int length);
+ 	void visualizeStereo(Aquila::ComplexType m_data_left, Aquila::ComplexType m_data_right, int index, int length, double str_left, double str_right);
 
 	// Holds all the shapes that are visible on screen
  	std::vector<VShape*> vshapes;

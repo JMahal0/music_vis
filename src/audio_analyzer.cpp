@@ -14,7 +14,7 @@ namespace Aquila {
 
 void AudioAnalyzer::FFT(WaveFile wav, Aquila::SpectrumType* spectrum) {
 	
-	const size_t SIZE = 32;
+	const size_t SIZE = 1024;
 
 	auto fft = Aquila::FftFactory::getFft(SIZE);
 	*spectrum = fft->fft(wav.toArray());

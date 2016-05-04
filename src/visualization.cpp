@@ -28,13 +28,14 @@ VShape::VShape(double _duration, Color f_c) {
 void Triangle::draw(DrawRend *dr, Matrix3x3 global_transform) {
 
 	if (fill_color.a != 0) {
+
 		Vector2D a = global_transform * a;
 		Vector2D b = global_transform * b;
 		Vector2D c = global_transform * c;
-
+		std::cout << "[Visualization] - Triangle calling rasterize" << std::endl;
 		dr->rasterize_triangle( a.x, a.y, b.x, b.y, c.x, c.y, fill_color, this );
 	} else {
-		std::cout << "[Visualization] - Triangle has alpha of 0";
+		std::cout << "[Visualization] - Triangle has alpha of 0" << std::endl;
 	}
 	
 }
@@ -56,6 +57,7 @@ void Line::draw(DrawRend *dr, Matrix3x3 global_transform) {
 	if (fill_color.a != 0) {
 		Vector2D p0 = global_transform * p0;
 		Vector2D p1 = global_transform * p1;
+		std::cout << "[Visualization] - Line calling rasterize" << std::endl;
 		dr->rasterize_line(p0.x, p0.y, p1.x, p1.y, fill_color);
 	}
 	
@@ -63,12 +65,15 @@ void Line::draw(DrawRend *dr, Matrix3x3 global_transform) {
 
 void Rectangle::draw(DrawRend *dr, Matrix3x3 global_transform) {
 	
+	// std::cout << "[Rectangle] - drawing if not 0 " << fill_color.a << std::endl;
+
 	Vector2D p0 = global_transform * p;
 	Vector2D p1 = global_transform * Vector2D( p.x + w , p.y );
 	Vector2D p2 = global_transform * Vector2D( p.x , p.y + h );
 	Vector2D p3 = global_transform * Vector2D( p.x + w , p.y + h );
 
 	if (fill_color.a != 0 ) {
+		std::cout << "[Visualization] - Rectangle calling rasterize" << std::endl;
     dr->rasterize_triangle( p0.x, p0.y, p1.x, p1.y, p2.x, p2.y, fill_color );
     dr->rasterize_triangle( p2.x, p2.y, p1.x, p1.y, p3.x, p3.y, fill_color );
 	}
@@ -86,7 +91,7 @@ void Circle::draw(DrawRend *dr, Matrix3x3 global_transform) {
 		double dy = center.y - tanget_pt.y;
 
 		double radius = sqrt(dx * dx + dy * dy);
-
+		std::cout << "[Visualization] - Circle calling rasterize" << std::endl;
 		dr->rasterize_circle( center.x, center.y, radius, fill_color);
 	}
 }
@@ -116,17 +121,52 @@ Visualization::Visualization(Color main_low, Color main_high, Color second_low, 
 }
 
 // The function will create a list of VShapes using m_data 
-// and will return it in the vshape_lst pointer. 
-// Index tells where the current data point is.
+// and will add them to the vshapes vector. 
+// Index tells where the current data point is and length is total
+// number of data points.
 void Visualization::visualizeMono(Aquila::ComplexType m_data, int index, int length) {
 	int er = 3;
 }
 
 // The function will create a list of VShapes using both 
-// of the m_data and will return it in the vshape_lst pointer.  
-// Index tells where the current data point is.
-void Visualization::visualizeStereo(Aquila::ComplexType m_data_left, Aquila::ComplexType m_data_right, int index, int length) {
-	int er = 3;
+// of the m_data and will add them to the vshapes vector.  
+// Index tells where the current data point is and length is total
+// number of data points.
+void Visualization::visualizeStereo(Aquila::ComplexType m_data_left, Aquila::ComplexType m_data_right, int index, int length, double str_left, double str_right) {
+	
+	// Rectangle r1 = Rectangle(1.0, Color::Black, Vector2D(0.0, 0.0), 100.0, 20.0) ;
+	// Triangle t1 = Triangle(1.0, color_main_low, Vector2D(0.0, 0.0), Vector2D(0.0, 122.0), Vector2D(58.0, 3.0));
+	// GradiantTri gt1 = GradiantTri(1.0, color_main_low, Vector2D(0.0, 0.0), Vector2D(0.0, 122.0), Vector2D(58.0, 3.0), color_main_low, color_accent_high, color_secondary_high );
+	// Line l1 = Line(1.0, color_secondary_high, Vector2D(0, 0), Vector2D(320, 240));
+	// Circle c2 = Circle(1.0, color_secondary_low, Vector2D(1,1), 1);
+	GradiantCir gc1 = GradiantCir(1.0, color_secondary_high, Vector2D(0,0), 50, color_secondary_high, color_accent_low);
+
+	float x = (index + 0.0)/length;
+	Color f = x*color_main_low + (1.0-x)*color_secondary_high;
+
+    double intensity_left = sqrt(m_data_left.real()*m_data_left.real() + m_data_left.imag()*m_data_left.imag());
+    
+    double intensity_right = sqrt(m_data_right.real()*m_data_right.real() + m_data_right.imag()*m_data_right.imag());
+
+	float alf = std::max(std::min(1.0, intensity_right/str_right + intensity_left/str_left), .4);
+	// std::cout << alf << std::endl;
+	f.a = alf;
+
+	// Circle c2 = Circle(1.0, f, Vector2D(0,0), 1);
+	Circle c1 = Circle(1.0, f, Vector2D(6,-6), 8);
+
+
+	vshapes.push_back(&c1);
+	vshapes.push_back(&gc1);
+
+	// vshapes.push_back(&c2);
+
+	// vshapes.push_back(&gt1);
+	// vshapes.push_back(&t1);
+	// vshapes.push_back(&l1);
+	// vshapes.push_back(&r1);
+
+
 }
 
 

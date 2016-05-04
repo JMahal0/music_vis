@@ -30,10 +30,12 @@ DrawRend::DrawRend(size_t w, size_t h) {
   // memset(&framebuffer[0], 255, 4 * width * height);
   // memset(&superbuffer[0], 255, 4 * width * height * sample_rate);
 
-  float scale = min(width, height);
-  ndc_to_screen(0,0) = scale; ndc_to_screen(0,2) = (width  - scale) / 2;
-  ndc_to_screen(1,1) = scale; ndc_to_screen(1,2) = (height - scale) / 2;
+  float c_scale = min(width, height);
+  ndc_to_screen(0,0) = c_scale; ndc_to_screen(0,2) = (width  - c_scale) / 2;
+  ndc_to_screen(1,1) = c_scale; ndc_to_screen(1,2) = (height - c_scale) / 2;
 
+  ndc_to_screen = ndc_to_screen*scale(.1, .1);
+  ndc_to_screen = ndc_to_screen*translate(-1.5, 10);
   
 }
 
@@ -47,15 +49,19 @@ DrawRend::~DrawRend( void ) {}
  * The image filename contains the month, date, hour, minute, and second
  * to make sure it is unique and identifiable.
  */
-void DrawRend::write_frame_shot(double frame_number, std::vector<VShape*> *shapes) {
+void DrawRend::write_frame_shot(int frame_number, std::vector<VShape*> *shapes) {
     draw_frame(shapes);
 
 
     time_t t = time(nullptr);
     tm *lt = localtime(&t);
     stringstream ss;
-    ss << "screenshot_" << lt->tm_mon+1 << "-" << lt->tm_mday << "_" 
-      << lt->tm_hour << "-" << lt->tm_min << "-" << lt->tm_sec << ".png";
+    ss << "frame_" /*<< lt->tm_mon+1 << "-" << lt->tm_mday << "_" 
+      << lt->tm_hour << "-" << lt->tm_min << "-" << lt->tm_sec << "-"*/ << frame_number << ".png"; 
+
+    // ss << "screenshot_" << lt->tm_mon+1 << "-" << lt->tm_mday << "_" 
+    //   << lt->tm_hour << "-" << lt->tm_min << "-" << lt->tm_sec << "-" << frame_number << ".png"; //temp
+
     string file = ss.str();
     cout << "Writing file " << file << "...";
 
@@ -76,7 +82,14 @@ void DrawRend::draw_frame(std::vector<VShape*> *shapes) {
   // SVG &svg = *svgs[current_svg];
   // svg.draw(this, ndc_to_screen*svg_to_ndc[current_svg]);
 
-  (*shapes)[2]->draw(this, ndc_to_screen);
+
+
+  for (int i = 0; i < (*shapes).size(); ++i) {
+    (*shapes)[i]->draw(this, ndc_to_screen);
+    cout << "[DrawRend] - draw_frame shape #" << i << endl;
+  }
+
+  // (*shapes)[2]->draw(this, ndc_to_screen);
 
   // call the draw method of each Shape in the vector of Shapes, which is either public static or passed in from somewhere
 
@@ -125,6 +138,9 @@ void DrawRend::downsample() {
 // rasterize a point from a line
 void DrawRend::rasterize_line_point( float x, float y, Color color ) {
   // fill in the nearest pixel
+
+  // cout << "LINE POINT SUCCESS" << endl;
+
   int sx = (int) floor(x) * sqrt(sample_rate);
   int sy = (int) floor(y) * sqrt(sample_rate);
 
@@ -149,6 +165,9 @@ void DrawRend::rasterize_line_point( float x, float y, Color color ) {
   // rasterize a point from a shape
 void DrawRend::rasterize_shape_point(float x, float y, int xr, int yr, Color color) {
     // check bounds, x and y are floats that hold integer values
+  
+  // cout << "SHAPE POINT SUCCESS" << endl;
+
   int sx = (int) floor(x);
   int sy = (int) floor(y);
 
@@ -301,7 +320,7 @@ void DrawRend::rasterize_triangle( float x0, float y0,
                          float x1, float y1,
                          float x2, float y2,
                          Color color, Triangle *tri) {
-  
+  // cout << "tri-null";
   int sf = sqrt(sample_rate);
   float xmin = floor(min(x0, min(x1,x2)));
   float xmax = ceil(max(x0, max(x1,x2)));
@@ -320,9 +339,11 @@ void DrawRend::rasterize_triangle( float x0, float y0,
           float gamma = 1 - alpha - beta;
           if (alpha >= -.0001 && beta >= -.0001 && gamma >= -.0001 && alpha <= 1 && beta <= 1 && gamma <= 1) {
             if (tri) {
+              // cout << "tri-notnull";
               Color col = tri->color(alpha, beta); 
               rasterize_shape_point(x, y, xr, yr, col);
             } else {
+              // cout << "tri-null";
               rasterize_shape_point(x, y, xr, yr, color);          
             }
           }

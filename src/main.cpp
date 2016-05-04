@@ -82,21 +82,33 @@ void stereoFile(Aquila::WaveFile wav_left, Aquila::WaveFile wav_right) {
                         Color::fromHex("ff8c1a"), Color::fromHex("ff2d14"),
                         Color::fromHex("b3ffff"), Color::fromHex("80ffbf"));
 
-  CGL::DrawRend renderer = CGL::DrawRend(640, 480);
+  CGL::DrawRend renderer = CGL::DrawRend(320, 240);
 
   int length = m_data_left.size();
 
-  for (int i = 0; i < length; ++i) {
+  double avg_left = 0;
+  double avg_right = 0;
 
-    std::vector<VShape*> shapes;
+    for (int i = 0; i < length; ++i) {
     
-    double intensity_left = sqrt(m_data_left[i].real()*m_data_left[i].real() + m_data_left[i].imag()*m_data_left[i].imag());
+    avg_left += sqrt(m_data_left[i].real()*m_data_left[i].real() + m_data_left[i].imag()*m_data_left[i].imag());
     
-    double intensity_right = sqrt(m_data_right[i].real()*m_data_right[i].real() + m_data_right[i].imag()*m_data_right[i].imag());
+    avg_right += sqrt(m_data_right[i].real()*m_data_right[i].real() + m_data_right[i].imag()*m_data_right[i].imag());
 
     // printf("Int L %f R %f\n", intensity_left/Aquila::rms(wav_left), intensity_right/Aquila::rms(wav_right));
+  }
+  avg_left /= length;
+  avg_right /= length;
 
-    vis.visualizeStereo(m_data_left[i], m_data_right[i], i, length);
+  for (int i = 0; i < length; ++i) {
+
+    // if (i != 0) {
+    //   return;
+    // }
+
+    vis.vshapes.clear(); // temp
+
+    vis.visualizeStereo(m_data_left[i], m_data_right[i], i, length, avg_left, avg_right);
 
     renderer.write_frame_shot(i, &(vis.vshapes));
 
