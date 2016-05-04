@@ -87,12 +87,15 @@ void Circle::draw(DrawRend *dr, Matrix3x3 global_transform) {
 		Vector2D center = global_transform * o;
 		Vector2D tanget_pt = global_transform * Vector2D(o.x + r, o.y);
 
+
 		double dx = center.x - tanget_pt.x;
 		double dy = center.y - tanget_pt.y;
 
 		double radius = sqrt(dx * dx + dy * dy);
 		// std::cout << "[Visualization] - Circle calling rasterize" << std::endl;
-		dr->rasterize_circle( center.x, center.y, radius, fill_color);
+		std::cout << global_transform << std::endl;
+		std::cout << "center is " << center << " - w/o transf origin is" << o << " --- radius is " << radius << " - w/o transf radius is " << r << std::endl;
+		dr->rasterize_circle( center.x, center.y, radius, fill_color, this);
 	}
 }
 
@@ -104,8 +107,11 @@ Color Circle::color(float distance) {
 // origin (near_c) and the color at the edge (far_c).
 // distance is the distance from the origin / the radius.
 Color GradiantCir::color(float distance) {
-	//near_c,far_c.alpha = fill_color.alpha
-	return distance*far_c + (1 - distance)*near_c;
+	near_c.a = fill_color.a;
+	far_c.a = fill_color.a;
+	Color col = distance*far_c + (1 - distance)*near_c;
+	// std::cout << "[GradiantCir-color] distance is " << distance << " color is " << col << std::endl;
+	return col;
 }
 
 
@@ -134,12 +140,14 @@ void Visualization::visualizeMono(Aquila::ComplexType m_data, int index, int len
 // number of data points.
 void Visualization::visualizeStereo(Aquila::ComplexType m_data_left, Aquila::ComplexType m_data_right, int index, int length, double str_left, double str_right) {
 	
-	// Rectangle r1 = Rectangle(1.0, Color::Black, Vector2D(0.0, 0.0), 100.0, 20.0) ;
-	// Triangle t1 = Triangle(1.0, color_main_low, Vector2D(0.0, 0.0), Vector2D(0.0, 122.0), Vector2D(58.0, 3.0));
+	// Rectangle r1 = Rectangle(1.0, Color::Black, Vector2D(0.0, -2.0), 5.0, 2.5) ;
+	Triangle t1 = Triangle(1.0, color_accent_low, Vector2D(0.0, 0.0), Vector2D(0.0, -3.5), Vector2D(5.8, 3.0));
 	// GradiantTri gt1 = GradiantTri(1.0, color_main_low, Vector2D(0.0, 0.0), Vector2D(0.0, 122.0), Vector2D(58.0, 3.0), color_main_low, color_accent_high, color_secondary_high );
 	// Line l1 = Line(1.0, color_secondary_high, Vector2D(0, 0), Vector2D(320, 240));
 	// Circle c2 = Circle(1.0, color_secondary_low, Vector2D(1,1), 1);
-	GradiantCir gc1 = GradiantCir(1.0, color_secondary_high, Vector2D(0,0), 50, color_secondary_high, color_accent_low);
+	Color f2 = color_secondary_high;
+	f2.a = .5;
+	GradiantCir gc1 = GradiantCir(1.0, color_secondary_high, Vector2D(6, -5), 3, f2, color_accent_low);
 
 	float x = (index + 0.0)/length;
 	Color f = x*color_main_low + (1.0-x)*color_secondary_high;
@@ -148,21 +156,31 @@ void Visualization::visualizeStereo(Aquila::ComplexType m_data_left, Aquila::Com
     
     double intensity_right = sqrt(m_data_right.real()*m_data_right.real() + m_data_right.imag()*m_data_right.imag());
 
-	float alf = std::min(std::max(0.4, intensity_right/str_right + intensity_left/str_left)*1.75, 1.0);
+	float alf = std::min(std::max(0.1, intensity_right/str_right + intensity_left/str_left)*1.75, 1.0);
 	// std::cout << alf << std::endl;
 	f.a = alf;
 
 	// Circle c2 = Circle(1.0, f, Vector2D(0,0), 1);
-	Circle c1 = Circle(1.0, f, Vector2D(6,-6), 8);
+	Circle c1 = Circle(1.0, f, Vector2D(5,-5), 3);
+
+	std::cout << "Circle r " << c1.r << std::endl;
+	std::cout << "GradCircle r " << gc1.r << std::endl;
 
 
 	vshapes.push_back(&c1);
+
+
 	vshapes.push_back(&gc1);
 
+	// vshapes.push_back(&t1);
+
+	
+
+
+	
 	// vshapes.push_back(&c2);
 
 	// vshapes.push_back(&gt1);
-	// vshapes.push_back(&t1);
 	// vshapes.push_back(&l1);
 	// vshapes.push_back(&r1);
 

@@ -90,19 +90,14 @@ void DrawRend::draw_frame(std::vector<VShape*> *shapes) {
   memset(&framebuffer[0], 255, 4 * width * height);
   memset(&superbuffer[0], 255, 4 * width * height * sample_rate);
 
-  // SVG &svg = *svgs[current_svg];
-  // svg.draw(this, ndc_to_screen*svg_to_ndc[current_svg]);
 
-
+  // call the draw method of each Shape in the vector of Shapes, which is either public static or passed in from somewhere
 
   for (int i = 0; i < (*shapes).size(); ++i) {
+    cout << ndc_to_screen << endl;
     (*shapes)[i]->draw(this, ndc_to_screen);
     // cout << "[DrawRend] - draw_frame shape #" << i << endl;
   }
-
-  // (*shapes)[2]->draw(this, ndc_to_screen);
-
-  // call the draw method of each Shape in the vector of Shapes, which is either public static or passed in from somewhere
 
   downsample();
 }
@@ -373,6 +368,8 @@ void DrawRend::rasterize_circle( float cx, float cy, float r, Color color, Circl
   float xmax = ceil(cx + r);
   float ymin = floor(cy - r);
   float ymax = ceil(cy + r);
+
+  cout << "Circle-raster" << endl;
 
   for (float y = ymin; y <= ymax; y++) {
     for (int yr = 0; yr < sf; yr++) {

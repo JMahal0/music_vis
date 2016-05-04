@@ -102,9 +102,9 @@ void stereoFile(Aquila::WaveFile wav_left, Aquila::WaveFile wav_right) {
 
   for (int i = 0; i < length; ++i) {
 
-    // if (i != 0) {
-    //   return;
-    // }
+    if (i != 0) {
+      return;
+    }
 
     vis.vshapes.clear(); // temp
 
