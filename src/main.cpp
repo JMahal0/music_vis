@@ -103,14 +103,19 @@ void stereoFile(Aquila::WaveFile wav_left, Aquila::WaveFile wav_right) {
   for (int i = 0; i < length; ++i) {
 
     if (i != 0) {
-      return;
+      // return;
     }
-
+    // cout << "ara" << endl;
     vis.vshapes.clear(); // temp
-
+    // cout << "ere" << endl;
+    
     vis.visualizeStereo(m_data_left[i], m_data_right[i], i, length, avg_left, avg_right);
+    // cout << "iri" << endl;
+    
 
     renderer.write_frame_shot(i, &(vis.vshapes));
+    // cout << "oro" << endl;
+    
 
   }
 

@@ -160,8 +160,8 @@ void Visualization::visualizeStereo(Aquila::ComplexType m_data_left, Aquila::Com
 	// std::cout << alf << std::endl;
 	f.a = alf;
 
-	// Circle c2 = Circle(1.0, f, Vector2D(0,0), 1);
-	Circle c1 = Circle(1.0, f, Vector2D(5,-5), 3);
+	Circle c2 = Circle(1.0, f, Vector2D(5,-2), 1);
+	Circle c1 = Circle(1.0, f, Vector2D(5,-4), 3);
 
 	std::cout << "Circle r " << c1.r << std::endl;
 	std::cout << "GradCircle r " << gc1.r << std::endl;
@@ -178,7 +178,7 @@ void Visualization::visualizeStereo(Aquila::ComplexType m_data_left, Aquila::Com
 
 
 	
-	// vshapes.push_back(&c2);
+	vshapes.push_back(&c2);
 
 	// vshapes.push_back(&gt1);
 	// vshapes.push_back(&l1);
