@@ -8,8 +8,8 @@ set(APPLICATION_SOURCE
     
     audio_analyzer.cpp
     transforms.cpp
-    drawrend.cpp
     visualization.cpp
+    drawrend.cpp
     main.cpp
 
 )

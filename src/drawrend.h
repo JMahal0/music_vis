@@ -25,16 +25,7 @@ class DrawRend {
   // write current pixel buffer to disk
   void write_frame_shot(double frame_number);
 
-  // drawing functions
-  void draw_frame();
-  void downsample();
-
-  // rasterize a point
-  void rasterize_line_point( float x, float y, Color color );
-
-  // rasterize a point for a triangle
-  void rasterize_shape_point( float x, float y, int xr, int yr, Color color );
-
+  
   // rasterize a line
   void rasterize_line( float x0, float y0,
                        float x1, float y1,
@@ -56,8 +47,18 @@ private:
   size_t width, height;
 
   int sample_rate;
-
   std::vector<unsigned char> superbuffer;
+
+  // drawing functions
+  void draw_frame();
+  void downsample();
+
+  // rasterize a point
+  void rasterize_line_point( float x, float y, Color color );
+
+  // rasterize a point for a shape
+  void rasterize_shape_point( float x, float y, int xr, int yr, Color color );
+
   
 
 };

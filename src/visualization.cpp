@@ -5,8 +5,10 @@
 #include "visualization.h"
 #include <iostream>
 #include "drawrend.h"
-// #include "CGL/vector2D.h"
-// #include "CGL/matrix3x3.h"
+#include "CGL/vector2D.h"
+#include "CGL/matrix3x3.h"
+#include "transforms.h"
+
 
 
 namespace CGL {
@@ -27,6 +29,10 @@ void Triangle::draw(DrawRend *dr, Color color, Matrix3x3 global_transform) {
 		dr->rasterize_triangle( a.x, a.y, b.x, b.y, c.x, c.y, color, this );
 	}
 	
+}
+
+Color Triangle::color(float alpha, float beta, Color c) {
+	return c;
 }
 
 // Returns the appropriate weighted combination of the
@@ -60,21 +66,25 @@ void Rectangle::draw(DrawRend *dr, Color color, Matrix3x3 global_transform) {
 
 }
 
-// void Circle::draw(DrawRend *dr, Color color, Matrix3x3 global_transform) {
+void Circle::draw(DrawRend *dr, Color color, Matrix3x3 global_transform) {
 
-// 	if (color.a != 0) {
+	if (color.a != 0) {
 
-// 		Vector2D center = global_transform * o;
-// 		Vector2D tanget_pt = global_transform * Vector2D(o.x + r, o.y);
+		Vector2D center = global_transform * o;
+		Vector2D tanget_pt = global_transform * Vector2D(o.x + r, o.y);
 
-// 		double dx = center.x - tanget_pt.x;
-// 		double dy = center.y - tanget_pt.y;
+		double dx = center.x - tanget_pt.x;
+		double dy = center.y - tanget_pt.y;
 
-// 		double radius = sqrt(dx * dx + dy * dy);
+		double radius = sqrt(dx * dx + dy * dy);
 
-// 		dr->rasterize_circle( center.x, center.y, radius, color);
-// 	}
-// }
+		dr->rasterize_circle( center.x, center.y, radius, color);
+	}
+}
+
+Color Circle::color(float distance, Color c) {
+	return c;
+}
 
 // Returns the weighted combo of the the color at the 
 // origin (near_c) and the color at the edge (far_c).

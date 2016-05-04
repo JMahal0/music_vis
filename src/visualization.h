@@ -53,7 +53,7 @@ class Triangle : VShape {
   }
   
   void draw(DrawRend *dr, Color color, Matrix3x3 global_transform);
-  virtual Color color(double alpha, double beta, Color c) = 0;
+  virtual Color color(float alpha, float beta, Color c) = 0;
 
  private:
   Vector2D a, b, c; // The 3 points of the triangle
@@ -111,8 +111,8 @@ class Circle : VShape {
   }
 
   void draw(DrawRend *dr, Color color, Matrix3x3 global_transform);
-  
-  virtual Color color(double distance, Color c);
+
+  virtual Color color(float distance, Color c);
 
   Vector2D o; // origin
   double r; // radius
