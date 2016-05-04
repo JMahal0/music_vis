@@ -9,6 +9,7 @@
 #include "CGL/matrix3x3.h"
 #include "transforms.h"
 
+#include "aquila/global.h"
 
 
 namespace CGL {
@@ -117,14 +118,14 @@ Visualization::Visualization(Color main_low, Color main_high, Color second_low, 
 // The function will create a list of VShapes using m_data 
 // and will return it in the vshape_lst pointer. 
 // Index tells where the current data point is.
-void Visualization::visualizeMono(Aquila::ComplexType *m_data, double index, std::vector<VShape*> vshape_lst) {
+void Visualization::visualizeMono(Aquila::ComplexType m_data, int index, int length) {
 	int er = 3;
 }
 
 // The function will create a list of VShapes using both 
 // of the m_data and will return it in the vshape_lst pointer.  
 // Index tells where the current data point is.
-void Visualization::visualizeStereo(Aquila::ComplexType *m_data_left, Aquila::ComplexType *m_data_right, double index, std::vector<VShape*> vshape_lst) {
+void Visualization::visualizeStereo(Aquila::ComplexType m_data_left, Aquila::ComplexType m_data_right, int index, int length) {
 	int er = 3;
 }
 

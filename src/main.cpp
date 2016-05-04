@@ -84,7 +84,9 @@ void stereoFile(Aquila::WaveFile wav_left, Aquila::WaveFile wav_right) {
 
   CGL::DrawRend renderer = CGL::DrawRend(640, 480);
 
-  for (int i = 0; i < m_data_left.size(); ++i) {
+  int length = m_data_left.size();
+
+  for (int i = 0; i < length; ++i) {
 
     std::vector<VShape*> shapes;
     
@@ -94,9 +96,7 @@ void stereoFile(Aquila::WaveFile wav_left, Aquila::WaveFile wav_right) {
 
     // printf("Int L %f R %f\n", intensity_left/Aquila::rms(wav_left), intensity_right/Aquila::rms(wav_right));
 
-    // vis.visualizeStereo();
-
-    // cout << AudioAnalyzer::rtt << endl;
+    vis.visualizeStereo(m_data_left[i], m_data_right[i], i, length);
 
     renderer.write_frame_shot(i, &(vis.vshapes));
 

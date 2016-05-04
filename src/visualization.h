@@ -142,9 +142,9 @@ class Visualization {
  	Visualization(Color main_low, Color main_high, Color second_low, Color second_high, Color accent_low, Color accent_high); // all the 6 colors
  	~Visualization() {};
 
- 	void visualizeMono(Aquila::ComplexType *m_data, double index, std::vector<VShape*> vshape_lst);
+ 	void visualizeMono(Aquila::ComplexType m_data, int index, int length);
 
- 	void visualizeStereo(Aquila::ComplexType *m_data_left, Aquila::ComplexType *m_data_right, double index, std::vector<VShape*> vshape_lst);
+ 	void visualizeStereo(Aquila::ComplexType m_data_left, Aquila::ComplexType m_data_right, int index, int length);
 
 	// Holds all the shapes that are visible on screen
  	std::vector<VShape*> vshapes;
