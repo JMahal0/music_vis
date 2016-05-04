@@ -15,6 +15,7 @@ using namespace std;
 
 namespace CGL {
 
+class VShape;
 class Triangle;
 class Circle;
 
@@ -46,8 +47,8 @@ DrawRend::~DrawRend( void ) {}
  * The image filename contains the month, date, hour, minute, and second
  * to make sure it is unique and identifiable.
  */
-void DrawRend::write_frame_shot(double frame_number) {
-    draw_frame();
+void DrawRend::write_frame_shot(double frame_number, std::vector<VShape*> *shapes) {
+    draw_frame(shapes);
 
 
     time_t t = time(nullptr);
@@ -68,12 +69,14 @@ void DrawRend::write_frame_shot(double frame_number) {
  * Draws the current frame to the framebuffer. Resolves the supersample buffers
  * into the framebuffer before posting the framebuffer pixels to the screen.
  */
-void DrawRend::draw_frame() {
+void DrawRend::draw_frame(std::vector<VShape*> *shapes) {
   memset(&framebuffer[0], 255, 4 * width * height);
   memset(&superbuffer[0], 255, 4 * width * height * sample_rate);
 
   // SVG &svg = *svgs[current_svg];
   // svg.draw(this, ndc_to_screen*svg_to_ndc[current_svg]);
+
+  (*shapes)[2]->draw(this, ndc_to_screen);
 
   // call the draw method of each Shape in the vector of Shapes, which is either public static or passed in from somewhere
 
@@ -317,7 +320,7 @@ void DrawRend::rasterize_triangle( float x0, float y0,
           float gamma = 1 - alpha - beta;
           if (alpha >= -.0001 && beta >= -.0001 && gamma >= -.0001 && alpha <= 1 && beta <= 1 && gamma <= 1) {
             if (tri) {
-              Color col = tri->color(alpha, beta, color); 
+              Color col = tri->color(alpha, beta); 
               rasterize_shape_point(x, y, xr, yr, col);
             } else {
               rasterize_shape_point(x, y, xr, yr, color);          
@@ -350,7 +353,7 @@ void DrawRend::rasterize_circle( float cx, float cy, float r, Color color, Circl
 
           if (dist <= r) {
             if (cir) {
-              Color col = cir->color(dist/r, color);
+              Color col = cir->color(dist/r);
               rasterize_shape_point(x, y, xr, yr, col);
             } else {
               rasterize_shape_point(x, y, xr, yr, color);          

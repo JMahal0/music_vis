@@ -7,7 +7,8 @@
 #define CGL_VISUALIZATION_H
 #include <vector>
 // #include "texture.h"
-#include "aquila/source/WaveFile.h"
+// #include "aquila/source/WaveFile.h"
+#include "aquila/global.h"
 #include "CGL/color.h"
 
 // #include "drawrend.h"
@@ -23,11 +24,11 @@ class DrawRend;
 
 class VShape {
  public:
-  VShape(double _duration);
+  VShape(double _duration, Color f_c);
   ~VShape() {}
 
   // Draws the VShape to the framebuffer
-  virtual void draw(DrawRend *dr, Color color, Matrix3x3 global_transform) = 0;
+  virtual void draw(DrawRend *dr, Matrix3x3 global_transform) = 0;
 
   // Makes the VShape's color closer and closer to the
   // background color.
@@ -42,18 +43,21 @@ class VShape {
   // The alpha value in RGBA. In range [0,1]
   // Decreases with time in fade function.
   float transparency_a;
+
+  // The color of the Shape, not used in GradiantTri or GradiantCir
+  Color fill_color;
 };
 
 class Triangle : VShape {
  public:
-  Triangle(double _duration, Vector2D p0, Vector2D p1, Vector2D p2) : VShape(_duration) {
+  Triangle(double _duration, Color f_c, Vector2D p0, Vector2D p1, Vector2D p2) : VShape(_duration, f_c) {
     a = p0;
     b = p1;
     c = p2;
   }
   
-  void draw(DrawRend *dr, Color color, Matrix3x3 global_transform);
-  virtual Color color(float alpha, float beta, Color c) = 0;
+  void draw(DrawRend *dr, Matrix3x3 global_transform);
+  virtual Color color(float alpha, float beta);
 
  private:
   Vector2D a, b, c; // The 3 points of the triangle
@@ -61,13 +65,13 @@ class Triangle : VShape {
 
 class GradiantTri : Triangle {
  public:
-  GradiantTri(double _duration, Vector2D p0, Vector2D p1, Vector2D p2, Color p0c, Color p1c, Color p2c): Triangle(_duration, p0, p1, p2) {
+  GradiantTri(double _duration, Color f_c, Vector2D p0, Vector2D p1, Vector2D p2, Color p0c, Color p1c, Color p2c): Triangle(_duration, f_c, p0, p1, p2) {
     ac = p0c;
     bc = p1c;
     cc = p2c;
   }
   
-  Color color(float alpha, float beta, Color c);
+  Color color(float alpha, float beta);
 
  private:
   Color ac, bc, cc;
@@ -77,12 +81,12 @@ class GradiantTri : Triangle {
 
 class Line : VShape {
  public:
-  Line(double _duration, Vector2D _p0, Vector2D _p1): VShape(_duration) {
+  Line(double _duration, Color f_c, Vector2D _p0, Vector2D _p1): VShape(_duration, f_c) {
     p0 = _p0;
     p1 = _p1;
   }
 
-  void draw(DrawRend *dr, Color color, Matrix3x3 global_transform);
+  void draw(DrawRend *dr, Matrix3x3 global_transform);
 
  private:
   Vector2D p0, p1;
@@ -90,13 +94,13 @@ class Line : VShape {
 
 class Rectangle : VShape {
  public:
-  Rectangle(double _duration, Vector2D _p, double _w, double _h): VShape(_duration) {
+  Rectangle(double _duration, Color f_c, Vector2D _p, double _w, double _h): VShape(_duration, f_c) {
     p = _p;
     w = _w;
     h = _h;
   }
   
-  void draw(DrawRend *dr, Color color, Matrix3x3 global_transform);
+  void draw(DrawRend *dr, Matrix3x3 global_transform);
 
  private:
   Vector2D p; // The bottom left corner of the Rectangle
@@ -105,14 +109,14 @@ class Rectangle : VShape {
 
 class Circle : VShape {
  public:
-  Circle(double _duration, Vector2D _o, double _r): VShape(_duration) {
+  Circle(double _duration, Color f_c, Vector2D _o, double _r): VShape(_duration, f_c) {
     o = _o;
     r = _r;
   }
 
-  void draw(DrawRend *dr, Color color, Matrix3x3 global_transform);
+  void draw(DrawRend *dr, Matrix3x3 global_transform);
 
-  virtual Color color(float distance, Color c);
+  virtual Color color(float distance);
 
   Vector2D o; // origin
   double r; // radius
@@ -120,12 +124,12 @@ class Circle : VShape {
 
 class GradiantCir : Circle {
  public:
-  GradiantCir(double _duration, Vector2D _o, double _r, Color near, Color far): Circle(_duration, _o, _r) {
+  GradiantCir(double _duration, Color f_c, Vector2D _o, double _r, Color near, Color far): Circle(_duration, f_c, _o, _r) {
     near_c = near;
     far_c = far;
   }
 
-  Color color(float distance, Color c);
+  Color color(float distance);
 
   Color near_c, far_c;
 };
@@ -136,18 +140,17 @@ class GradiantCir : Circle {
 class Visualization {
  public:
  	Visualization(Color main_low, Color main_high, Color second_low, Color second_high, Color accent_low, Color accent_high); // all the 6 colors
- 	~Visualization();
+ 	~Visualization() {};
 
- 	void visualizeMono(Aquila::SpectrumType *m_data, double index, std::vector<VShape> *vshape_lst);
+ 	void visualizeMono(Aquila::ComplexType *m_data, double index, std::vector<VShape*> vshape_lst);
 
- 	void visualizeStereo(Aquila::SpectrumType *m_data_left, Aquila::SpectrumType *m_data_right, double index, std::vector<VShape> *vshape_lst);
+ 	void visualizeStereo(Aquila::ComplexType *m_data_left, Aquila::ComplexType *m_data_right, double index, std::vector<VShape*> vshape_lst);
 
+	// Holds all the shapes that are visible on screen
+ 	std::vector<VShape*> vshapes;
 
 
  private:
- 	// Holds all the shapes that are visible on screen
- 	std::vector<VShape> vshapes;
-
  	// The color scheme of the visualization
 	Color color_main_low, color_main_high, color_secondary_low, color_secondary_high, color_accent_low, color_accent_high;
 

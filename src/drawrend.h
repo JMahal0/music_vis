@@ -23,7 +23,7 @@ class DrawRend {
   ~DrawRend( void );
 
   // write current pixel buffer to disk
-  void write_frame_shot(double frame_number);
+  void write_frame_shot(double frame_number, std::vector<VShape*> *shapes);
 
   
   // rasterize a line
@@ -50,7 +50,7 @@ private:
   std::vector<unsigned char> superbuffer;
 
   // drawing functions
-  void draw_frame();
+  void draw_frame(std::vector<VShape*> *shapes);
   void downsample();
 
   // rasterize a point

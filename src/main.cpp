@@ -19,7 +19,7 @@
 #include "audio_analyzer.h"
 #include "visualization.h"
 #include "drawrend.h"
-
+#include "CGL/color.h"
 
 using namespace std;
 using namespace CGL;
@@ -78,7 +78,15 @@ void stereoFile(Aquila::WaveFile wav_left, Aquila::WaveFile wav_right) {
   cout << "Left pow" << pow_left << endl;  
   cout << "Right pow" << pow_right << endl;
 
+  CGL::Visualization vis = CGL::Visualization(Color::fromHex("faff3d"), Color::fromHex("beff00"),
+                        Color::fromHex("ff8c1a"), Color::fromHex("ff2d14"),
+                        Color::fromHex("b3ffff"), Color::fromHex("80ffbf"));
+
+  CGL::DrawRend renderer = CGL::DrawRend(640, 480);
+
   for (int i = 0; i < m_data_left.size(); ++i) {
+
+    std::vector<VShape*> shapes;
     
     double intensity_left = sqrt(m_data_left[i].real()*m_data_left[i].real() + m_data_left[i].imag()*m_data_left[i].imag());
     
@@ -86,6 +94,11 @@ void stereoFile(Aquila::WaveFile wav_left, Aquila::WaveFile wav_right) {
 
     // printf("Int L %f R %f\n", intensity_left/Aquila::rms(wav_left), intensity_right/Aquila::rms(wav_right));
 
+    // vis.visualizeStereo();
+
+    // cout << AudioAnalyzer::rtt << endl;
+
+    renderer.write_frame_shot(i, &(vis.vshapes));
 
   }
 
@@ -117,7 +130,7 @@ int main( int argc, char** argv ) {
    }
 
   Aquila::WaveFile wav(argv[1]);
-    cout << "# of Channels: " << wav.getChannelsNum() << endl;
+  cout << "# of Channels: " << wav.getChannelsNum() << endl;
   if (wav.isStereo()) {
     Aquila::WaveFile wav_right(argv[1], Aquila::StereoChannel::RIGHT);
     stereoFile(wav, wav_right);
