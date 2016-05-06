@@ -95,7 +95,7 @@ void stereoFile(Aquila::WaveFile wav_left, Aquila::WaveFile wav_right) {
     if (i != 0) {
       // return;
     }
-    // cout << "ara" << endl;
+    // cout << i << endl;
     vis.vshapes.clear(); // temp
     // cout << "ere" << endl;
     
@@ -104,7 +104,7 @@ void stereoFile(Aquila::WaveFile wav_left, Aquila::WaveFile wav_right) {
     
 
     renderer.write_frame_shot(i, &(vis.vshapes));
-    // cout << "oro" << endl;
+    // cout << "[main]Seg fault before this" << endl;
     
 
   }

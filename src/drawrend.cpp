@@ -20,23 +20,16 @@ class Triangle;
 class Circle;
 
 DrawRend::DrawRend(size_t w, size_t h) {
-  sample_rate = 2;
+  sample_rate = 4;
 
   // Set up size
   width = w; height = h;
 
   framebuffer.resize(4 * w * h);
   superbuffer.resize(4 * w * h * sample_rate);
-  // memset(&framebuffer[0], 255, 4 * width * height);
-  // memset(&superbuffer[0], 255, 4 * width * height * sample_rate);
 
   float c_scale = min(width, height);
-  ndc_to_screen(0,0) = c_scale; ndc_to_screen(0,2) = (width  - c_scale) / 2;
-  ndc_to_screen(1,1) = c_scale; ndc_to_screen(1,2) = (height - c_scale) / 2;
 
-  ndc_to_screen = ndc_to_screen*scale(.1, .1);
-  ndc_to_screen = ndc_to_screen*translate(-1.5, 10);
-  
 }
 
 DrawRend::~DrawRend( void ) {}
@@ -51,6 +44,7 @@ DrawRend::~DrawRend( void ) {}
  */
 void DrawRend::write_frame_shot(int frame_number, std::vector<VShape*> *shapes) {
     draw_frame(shapes);
+    // cout << "[DrawRend::write_frame_shot] Seg fault before this" << endl;
 
     string file_num = "";
     if (frame_number < 10 && frame_number >= 0) {

@@ -1,10 +1,11 @@
 # Calls both the visualizer to create the image files and ffmpeg to create the video on the users behalf
 # 
 # How to run: 
-# ./run_vis [input .wav file] [output .mp4 file]
+# ./run_vis [input .wav file] [output .mp4 file] [length of audio file in seconds]
 # Technically, other video files might be supported but I have only tested that the .mp4 file output works
+frames=`echo "1024/$3" | bc `
 ./visualizer $1
-../ffmpeg -framerate 32 -i frame_%04d.png -c:v libx264 -r 30 -pix_fmt yuv420p tmp.mp4
+../ffmpeg -framerate $frames -i frame_%04d.png -c:v libx264 -r 30 -pix_fmt yuv420p tmp.mp4
 ../ffmpeg -i tmp.mp4 -i $1 -c:v libx264 -c:a libvorbis -shortest $2
 rm frame_*.png
 rm tmp.mp4
