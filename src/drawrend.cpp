@@ -67,8 +67,7 @@ void DrawRend::write_frame_shot(int frame_number, std::vector<VShape*> *shapes) 
     time_t t = time(nullptr);
     tm *lt = localtime(&t);
     stringstream ss;
-    ss << "frame_" /*<< lt->tm_mon+1 << "-" << lt->tm_mday << "_" 
-      << lt->tm_hour << "-" << lt->tm_min << "-" << lt->tm_sec << "-"*/ << file_num << ".png"; 
+    ss << "frame_" << file_num << ".png"; 
 
     // ss << "screenshot_" << lt->tm_mon+1 << "-" << lt->tm_mday << "_" 
     //   << lt->tm_hour << "-" << lt->tm_min << "-" << lt->tm_sec << "-" << frame_number << ".png"; //temp
@@ -94,7 +93,7 @@ void DrawRend::draw_frame(std::vector<VShape*> *shapes) {
   // call the draw method of each Shape in the vector of Shapes, which is either public static or passed in from somewhere
 
   for (int i = 0; i < (*shapes).size(); ++i) {
-    cout << ndc_to_screen << endl;
+    // cout << "[DrawRend] - " << endl << ndc_to_screen << endl;
     (*shapes)[i]->draw(this, ndc_to_screen);
     // cout << "[DrawRend] - draw_frame shape #" << i << endl;
   }
@@ -369,7 +368,7 @@ void DrawRend::rasterize_circle( float cx, float cy, float r, Color color, Circl
   float ymin = floor(cy - r);
   float ymax = ceil(cy + r);
 
-  cout << "Circle-raster" << endl;
+  // cout << "Circle-raster" << endl;
 
   for (float y = ymin; y <= ymax; y++) {
     for (int yr = 0; yr < sf; yr++) {

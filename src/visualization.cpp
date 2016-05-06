@@ -93,8 +93,8 @@ void Circle::draw(DrawRend *dr, Matrix3x3 global_transform) {
 
 		double radius = sqrt(dx * dx + dy * dy);
 		// std::cout << "[Visualization] - Circle calling rasterize" << std::endl;
-		std::cout << global_transform << std::endl;
-		std::cout << "center is " << center << " - w/o transf origin is" << o << " --- radius is " << radius << " - w/o transf radius is " << r << std::endl;
+		// std::cout << "[Visualization] - Circle" << global_transform << std::endl;
+		// std::cout << "[Visualization] - Circle" << "center is " << center << " - w/o transf origin is" << o << " --- radius is " << radius << " - w/o transf radius is " << r << std::endl;
 		dr->rasterize_circle( center.x, center.y, radius, fill_color, this);
 	}
 }
@@ -149,11 +149,12 @@ void Visualization::visualizeStereo(Aquila::ComplexType m_data_left, Aquila::Com
 	f2.a = .5;
 	GradiantCir gc1 = GradiantCir(1.0, color_secondary_high, Vector2D(6, -5), 3, f2, color_accent_low);
 
+
+
 	float x = (index + 0.0)/length;
 	Color f = x*color_main_low + (1.0-x)*color_secondary_high;
 
-    double intensity_left = sqrt(m_data_left.real()*m_data_left.real() + m_data_left.imag()*m_data_left.imag());
-    
+    double intensity_left = sqrt(m_data_left.real()*m_data_left.real() + m_data_left.imag()*m_data_left.imag());    
     double intensity_right = sqrt(m_data_right.real()*m_data_right.real() + m_data_right.imag()*m_data_right.imag());
 
 	float alf = std::min(std::max(0.1, intensity_right/str_right + intensity_left/str_left)*1.75, 1.0);
@@ -163,14 +164,14 @@ void Visualization::visualizeStereo(Aquila::ComplexType m_data_left, Aquila::Com
 	Circle c2 = Circle(1.0, f, Vector2D(5,-2), 1);
 	Circle c1 = Circle(1.0, f, Vector2D(5,-4), 3);
 
-	std::cout << "Circle r " << c1.r << std::endl;
-	std::cout << "GradCircle r " << gc1.r << std::endl;
+	// std::cout << "Circle r " << c1.r << std::endl;
+	// std::cout << "GradCircle r " << gc1.r << std::endl;
 
 
 	vshapes.push_back(&c1);
 
 
-	vshapes.push_back(&gc1);
+	// vshapes.push_back(&gc1);
 
 	// vshapes.push_back(&t1);
 

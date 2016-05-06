@@ -26,30 +26,20 @@ using namespace CGL;
 
 #define msg(s) cerr << "[Main] " << s << endl;
 
-// int analyze(double* sample_data, Aquila::WaveFile wav, double time) {
-//   const size_t SIZE = 64;
-
-//   auto fft = Aquila::FftFactory::getFft(SIZE);
-//   Aquila::SpectrumType spectrum = fft->fft(wav.toArray());
-
-//   cout << "stuff" << endl;
-
-
-//   return 0;
-// }
-
 void monoFile(Aquila::WaveFile wav) {
   Aquila::SpectrumType m_data;
   Aquila::AudioAnalyzer::FFT(wav, &m_data);
 
+  CGL::Visualization vis = CGL::Visualization(Color::fromHex("faff3d"), Color::fromHex("beff00"),
+                        Color::fromHex("ff8c1a"), Color::fromHex("ff2d14"),
+                        Color::fromHex("b3ffff"), Color::fromHex("80ffbf"));
+
+  CGL::DrawRend renderer = CGL::DrawRend(640, 480);
+
+
   for (int i = 0; i < m_data.size(); ++i) {
     
-    // printf("Real %f, Imaginary %f\n", m_data[i].real(), m_data[i].imag());
     double intensity = sqrt(m_data[i].real()*m_data[i].real() + m_data[i].imag()*m_data[i].imag());
-    // printf("Int %f\t", intensity);
-
-    //call visualzations.visualize and then
-    //call drawrender.write_frame_shot
 
 
   }
@@ -63,20 +53,20 @@ void stereoFile(Aquila::WaveFile wav_left, Aquila::WaveFile wav_right) {
   Aquila::AudioAnalyzer::FFT(wav_left, &m_data_left);
   Aquila::AudioAnalyzer::FFT(wav_right, &m_data_right);
 
-  double pow_left = Aquila::power(wav_left);
-  double pow_right = Aquila::power(wav_right);
+  // double pow_left = Aquila::power(wav_left);
+  // double pow_right = Aquila::power(wav_right);
 
-  cout << "Left mean" << Aquila::mean(wav_left) << endl;  
-  cout << "Right mean" << Aquila::mean(wav_right) << endl;
+  // cout << "Left mean" << Aquila::mean(wav_left) << endl;  
+  // cout << "Right mean" << Aquila::mean(wav_right) << endl;
 
-  cout << "Left energy" << Aquila::energy(wav_left) << endl;  
-  cout << "Right energy" << Aquila::energy(wav_right) << endl;
+  // cout << "Left energy" << Aquila::energy(wav_left) << endl;  
+  // cout << "Right energy" << Aquila::energy(wav_right) << endl;
 
-  cout << "Left RMS" << Aquila::rms(wav_left) << endl;  
-  cout << "Right RMS" << Aquila::rms(wav_right) << endl;
+  // cout << "Left RMS" << Aquila::rms(wav_left) << endl;  
+  // cout << "Right RMS" << Aquila::rms(wav_right) << endl;
 
-  cout << "Left pow" << pow_left << endl;  
-  cout << "Right pow" << pow_right << endl;
+  // cout << "Left pow" << pow_left << endl;  
+  // cout << "Right pow" << pow_right << endl;
 
   CGL::Visualization vis = CGL::Visualization(Color::fromHex("faff3d"), Color::fromHex("beff00"),
                         Color::fromHex("ff8c1a"), Color::fromHex("ff2d14"),
@@ -118,8 +108,6 @@ void stereoFile(Aquila::WaveFile wav_left, Aquila::WaveFile wav_right) {
     
 
   }
-
-
 
 }
 
